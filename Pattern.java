@@ -222,7 +222,7 @@ public class Pattern {
 
 				directionScore -= Math.abs(fd1.pitch() - fd2.pitch());
 				directionScore -= Math.abs(fd1.roll() - fd2.roll());
-				directionScore -= Math.abs(fd1.yaW() - fd2.yaw());
+				directionScore -= Math.abs(fd1.yaw() - fd2.yaw());
 			}
 		}
 
@@ -237,7 +237,7 @@ public class Pattern {
 
 		directionScore -= Math.abs(pd1.pitch() - pd2.pitch());
 		directionScore -= Math.abs(pd1.roll() - pd2.roll());
-		directionScore -= Math.abs(pd1.yaW() - pd2.yaw());
+		directionScore -= Math.abs(pd1.yaw() - pd2.yaw());
 
 		score[0] = positionScore;
 		score[1] = directionScore;
