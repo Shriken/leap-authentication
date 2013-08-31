@@ -8,7 +8,7 @@ public class Pattern {
 	int[] fingerKey;
 	int length; //number of stored frames
 
-	final double MOVEMENT_THRESHOLD = -30;
+	final double MOVEMENT_THRESHOLD = 30;
 
 	public Pattern() {
 		fingerData = new ArrayList<Vector[][]>();
@@ -37,7 +37,7 @@ public class Pattern {
 
 		System.out.println(scores[0]);
 
-		return scores[0] < MOVEMENT_THRESHOLD; // || scores[1] > ROTATION_THRESHOLD;
+		return scores[0] > MOVEMENT_THRESHOLD; // || scores[1] > ROTATION_THRESHOLD;
 	}
 
 	public double movement() {
@@ -216,13 +216,13 @@ public class Pattern {
 			Vector fd2 = finger2[1];
 
 			if (fp1 != null && fp2 != null) {
-				positionScore -= Math.abs(fp1.getX() - fp2.getX());
-				positionScore -= Math.abs(fp1.getY() - fp2.getY());
-				positionScore -= Math.abs(fp1.getZ() - fp2.getZ());
+				positionScore += Math.abs(fp1.getX() - fp2.getX());
+				positionScore += Math.abs(fp1.getY() - fp2.getY());
+				positionScore += Math.abs(fp1.getZ() - fp2.getZ());
 
-				directionScore -= Math.abs(fd1.pitch() - fd2.pitch());
-				directionScore -= Math.abs(fd1.roll() - fd2.roll());
-				directionScore -= Math.abs(fd1.yaw() - fd2.yaw());
+				directionScore += Math.abs(fd1.pitch() - fd2.pitch());
+				directionScore += Math.abs(fd1.roll() - fd2.roll());
+				directionScore += Math.abs(fd1.yaw() - fd2.yaw());
 			}
 		}
 
@@ -231,13 +231,13 @@ public class Pattern {
 		Vector pd1 = palmFrame1[1]; //direction
 		Vector pd2 = palmFrame2[1];
 
-		positionScore -= Math.abs(pp1.getX() - pp2.getX());
-		positionScore -= Math.abs(pp1.getY() - pp2.getY());
-		positionScore -= Math.abs(pp1.getZ() - pp2.getZ());
+		positionScore += Math.abs(pp1.getX() - pp2.getX());
+		positionScore += Math.abs(pp1.getY() - pp2.getY());
+		positionScore += Math.abs(pp1.getZ() - pp2.getZ());
 
-		directionScore -= Math.abs(pd1.pitch() - pd2.pitch());
-		directionScore -= Math.abs(pd1.roll() - pd2.roll());
-		directionScore -= Math.abs(pd1.yaw() - pd2.yaw());
+		directionScore += Math.abs(pd1.pitch() - pd2.pitch());
+		directionScore += Math.abs(pd1.roll() - pd2.roll());
+		directionScore += Math.abs(pd1.yaw() - pd2.yaw());
 
 		score[0] = positionScore;
 		score[1] = directionScore;
