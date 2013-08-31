@@ -17,17 +17,52 @@ public class Pattern {
 		length = 0;
 	}
 
-	public double[] compare(Pattern p) {
-		//doesn't account for time differences... is that good?
-		double[] score = new double[2];
+	public double compare(Pattern p) {
 
-		for (int i=0; i<p.length && i<length; i++) {
-			double[] cf = compareFrames(p, i);
-			score[0] += cf[0];
-			score[1] += cf[1];
+		//generate dynamic time warp matrix
+		double[][] dtwMatrix = new double[length][p.length];
+
+		for (int i=0; i<length; i++) {
+			for (int j=0; j<p.length; j++) {
+				double[] scores = new double[3];
+
+				double cost = compareFrames(i, p, j)[0];
+				
+				if (i > 0 && j > 0)
+					scores[0] = cost + dtwMatrix[i-1][j-1];
+				else
+					scores[0] = -1;
+
+				if (i > 0)
+					scores[1] = cost + dtwMatrix[i-1][j];
+				else
+					scores[1] = -1;
+
+				if (j > 0)
+					scores[2] = cost + dtwMatrix[i][j-1];
+				else
+					scores[2] = -1;
+
+				double min = dtwMin(scores);
+
+				if (min == -1) //must be top left cell
+					dtwMatrix[i][j] = cost;
+				else
+					dtwMatrix[i][j] = min;
+			}
 		}
 
-		return score;
+		return dtwMatrix[length - 1][p.length - 1];
+	}
+
+	public double dtwMin(double[] scores) {
+		double min = -1;
+
+		for (double s : scores)
+			if (s != -1 && (min == -1 || s < min))
+				min = s;
+
+		return min;
 	}
 
 	public boolean justMoved() {
@@ -191,6 +226,11 @@ public class Pattern {
 	public double[] compareFrames(Pattern p, int frameNum) {
 		return compareFrames(fingerData.get(frameNum), p.fingerData.get(frameNum),
 							 palmData.get(frameNum), p.palmData.get(frameNum));
+	}
+
+	public double[] compareFrames(int fn1, Pattern p, int fn2) {
+		return compareFrames(fingerData.get(fn1), p.fingerData.get(fn2),
+							 palmData.get(fn1), p.palmData.get(fn2));
 	}
 
 	public double[] compareFrames(int fn1, int fn2) {

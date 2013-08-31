@@ -14,9 +14,7 @@ public class Authenticator {
 
 		Pattern q = getSavedPattern();
 
-		double[] score = p.compare(q);
-
-		System.out.println(score[0]);
+		System.out.println(p.compare(q));
 	}
 
 	public static Pattern recordPattern() {
