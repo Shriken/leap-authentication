@@ -189,71 +189,55 @@ public class Pattern {
 	}
 
 	public double[] compareFrames(Pattern p, int frameNum) {
-		double[] score = new double[2];
-
-		double directionScore = 0;
-		double positionScore = 0;
-
-		for (int i=0; i<5; i++) {
-			Vector[] f = fingerData.get(frameNum)[i];
-			Vector[] pf = p.fingerData.get(frameNum)[i];
-
-			if (f[0] != null && pf[0] != null) {
-				positionScore -= Math.abs(f[0].getX() - pf[0].getX());
-				positionScore -= Math.abs(f[0].getY() - pf[0].getY());
-				positionScore -= Math.abs(f[0].getZ() - pf[0].getZ());
-
-				directionScore -= Math.abs(f[1].pitch() - pf[1].pitch());
-				directionScore -= Math.abs(f[1].roll() - pf[1].roll());
-				directionScore -= Math.abs(f[1].yaw() - pf[1].yaw());
-			}
-		}
-
-		Vector[] f = palmData.get(frameNum);
-		Vector[] pf = p.palmData.get(frameNum);
-
-		positionScore -= Math.abs(f[0].getX() - pf[0].getX());
-		positionScore -= Math.abs(f[0].getY() - pf[0].getY());
-		positionScore -= Math.abs(f[0].getZ() - pf[0].getZ());
-
-		directionScore -= Math.abs(f[1].pitch() - pf[1].pitch());
-		directionScore -= Math.abs(f[1].roll() - pf[1].roll());
-		directionScore -= Math.abs(f[1].yaw() - pf[1].yaw());
-
-		return score;
+		return compareFrames(fingerData.get(frameNum), p.fingerData.get(frameNum),
+							 palmData.get(frameNum), p.palmData.get(frameNum));
 	}
 
 	public double[] compareFrames(int fn1, int fn2) {
+		return compareFrames(fingerData.get(fn1), fingerData.get(fn2),
+							 palmData.get(fn1), palmData.get(fn2));
+	}
+
+	public double[] compareFrames(Vector[][] fingerFrame1, Vector[][] fingerFrame2,
+								  Vector[] palmFrame1, Vector[] palmFrame2) {
+		
 		double[] score = new double[2];
 
 		double positionScore = 0;
 		double directionScore = 0;
 
 		for (int i=0; i<5; i++) {
-			if (fingerData.get(fn1)[i][0] != null && fingerData.get(fn2)[i][0] != null) {
-				Vector[] f = fingerData.get(fn1)[i];
-				Vector[] pf = fingerData.get(fn2)[i];
+			Vector[] finger1 = fingerFrame1[i];
+			Vector[] finger2 = fingerFrame2[i];
 
-				positionScore -= Math.abs(f[0].getX() - pf[0].getX());
-				positionScore -= Math.abs(f[0].getY() - pf[0].getY());
-				positionScore -= Math.abs(f[0].getZ() - pf[0].getZ());
+			Vector fp1 = finger1[0]; //position
+			Vector fp2 = finger2[0];
+			Vector fd1 = finger1[1]; //direction
+			Vector fd2 = finger2[1];
 
-				directionScore -= Math.abs(f[1].pitch() - pf[1].pitch());
-				directionScore -= Math.abs(f[1].roll() - pf[1].roll());
-				directionScore -= Math.abs(f[1].yaw() - pf[1].yaw());
+			if (fp1 != null && fp2 != null) {
+				positionScore -= Math.abs(fp1.getX() - fp2.getX());
+				positionScore -= Math.abs(fp1.getY() - fp2.getY());
+				positionScore -= Math.abs(fp1.getZ() - fp2.getZ());
+
+				directionScore -= Math.abs(fd1.pitch() - fd2.pitch());
+				directionScore -= Math.abs(fd1.roll() - fd2.roll());
+				directionScore -= Math.abs(fd1.yaW() - fd2.yaw());
 			}
 		}
 
-		Vector[] f = palmData.get(fn1);
-		Vector[] pf = palmData.get(fn2);
+		Vector pp1 = palmFrame1[0]; //position
+		Vector pp2 = palmFrame2[0];
+		Vector pd1 = palmFrame1[1]; //direction
+		Vector pd2 = palmFrame2[1];
 
-		positionScore -= Math.abs(f[0].getX() - pf[0].getX());
-		positionScore -= Math.abs(f[0].getY() - pf[0].getY());
-		positionScore -= Math.abs(f[0].getZ() - pf[0].getZ());
+		positionScore -= Math.abs(pp1.getX() - pp2.getX());
+		positionScore -= Math.abs(pp1.getY() - pp2.getY());
+		positionScore -= Math.abs(pp1.getZ() - pp2.getZ());
 
-		directionScore -= Math.abs(f[1].pitch() - pf[1].pitch());
-		directionScore -= Math.abs(f[1].roll() - pf[1].roll());
-		directionScore -= Math.abs(f[1].yaw() - pf[1].yaw());
+		directionScore -= Math.abs(pd1.pitch() - pd2.pitch());
+		directionScore -= Math.abs(pd1.roll() - pd2.roll());
+		directionScore -= Math.abs(pd1.yaW() - pd2.yaw());
 
 		score[0] = positionScore;
 		score[1] = directionScore;
