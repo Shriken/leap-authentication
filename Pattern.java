@@ -8,7 +8,7 @@ public class Pattern {
 	int[] fingerKey;
 	int length; //number of stored frames
 
-	final double MOVEMENT_THRESHOLD = 50; //????????
+	final double MOVEMENT_THRESHOLD = -30;
 
 	public Pattern() {
 		fingerData = new ArrayList<Vector[][]>();
@@ -37,7 +37,7 @@ public class Pattern {
 
 		System.out.println(scores[0]);
 
-		return scores[0] > MOVEMENT_THRESHOLD; // || scores[1] > ROTATION_THRESHOLD;
+		return scores[0] < MOVEMENT_THRESHOLD; // || scores[1] > ROTATION_THRESHOLD;
 	}
 
 	public double movement() {
