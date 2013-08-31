@@ -112,6 +112,12 @@ public class Pattern {
 		length++; 
 	}
 
+	public void addFrameData(Vector[] palm, Vector[][] hand) {
+		palmData.add(palm);
+		fingerData.add(hand);
+		length++;
+	}
+
 	public Vector[][] sortByX(FingerList fl) {
 		Finger[] fingers = new Finger[5];
 
@@ -192,13 +198,15 @@ public class Pattern {
 			Vector[] f = fingerData.get(frameNum)[i];
 			Vector[] pf = p.fingerData.get(frameNum)[i];
 
-			positionScore -= Math.abs(f[0].getX() - pf[0].getX());
-			positionScore -= Math.abs(f[0].getY() - pf[0].getY());
-			positionScore -= Math.abs(f[0].getZ() - pf[0].getZ());
+			if (f[0] != null && pf[0] != null) {
+				positionScore -= Math.abs(f[0].getX() - pf[0].getX());
+				positionScore -= Math.abs(f[0].getY() - pf[0].getY());
+				positionScore -= Math.abs(f[0].getZ() - pf[0].getZ());
 
-			directionScore -= Math.abs(f[1].pitch() - pf[1].pitch());
-			directionScore -= Math.abs(f[1].roll() - pf[1].roll());
-			directionScore -= Math.abs(f[1].yaw() - pf[1].yaw());
+				directionScore -= Math.abs(f[1].pitch() - pf[1].pitch());
+				directionScore -= Math.abs(f[1].roll() - pf[1].roll());
+				directionScore -= Math.abs(f[1].yaw() - pf[1].yaw());
+			}
 		}
 
 		Vector[] f = palmData.get(frameNum);

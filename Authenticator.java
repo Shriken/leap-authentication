@@ -12,11 +12,11 @@ public class Authenticator {
 
 		savePattern(p);
 
-		//Pattern q = getSavedPattern();
+		Pattern q = getSavedPattern();
 
-		//double score = p.compare(q);
+		double[] score = p.compare(q);
 
-		//System.out.println(score);
+		System.out.println(score[0]);
 	}
 
 	public static Pattern recordPattern() {
@@ -54,6 +54,9 @@ public class Authenticator {
 			System.out.println("Saving pattern");
 
 			for (int i=0; i<pattern.length; i++) {
+				if (i > 30)
+					fw.flush();
+
 				//write palm
 				Vector[] palm = pattern.palmData.get(i);
 				String s = "p ";
@@ -72,9 +75,10 @@ public class Authenticator {
 
 				//write fingers
 				for (Vector[] finger : pattern.fingerData.get(i)) {
-					s = "";
 
 					if (finger[0] != null) {
+						s = "1 ";
+
 						//position
 						s += finger[0].getX() + " ";
 						s += finger[0].getY() + " ";
@@ -84,6 +88,8 @@ public class Authenticator {
 						s += finger[1].getX() + " ";
 						s += finger[1].getY() + " ";
 						s += finger[1].getZ();
+					} else {
+						s = "-1 ";
 					}
 
 					fw.write(s + "\n");
@@ -103,27 +109,66 @@ public class Authenticator {
 
 			String fn = fnReader.nextLine();
 
-			Scanner sc = new Scanner(new File(fn);
+			Scanner sc = new Scanner(new File(fn));
 
-			while (scanner.hasNextLine()) {
+			Pattern p = new Pattern();
+
+			while (sc.hasNextLine()) {
 				sc.next(); //get rid of leading 'p'
 
+				//load the palm data
 				Vector palmPosition = new Vector();
-				palmPosition.setX(sc.nextDouble());
-				palmPosition.setY(sc.nextDouble());
-				palmPosition.setZ(sc.nextDouble());
+				palmPosition.setX((float)sc.nextDouble());
+				palmPosition.setY((float)sc.nextDouble());
+				palmPosition.setZ((float)sc.nextDouble());
 
 				Vector palmDirection = new Vector();
-				palmDirection.setX(sc.nextDouble());
-				palmDirection.setY(sc.nextDouble());
-				palmDirection.setZ(sc.nextDouble());
+				palmDirection.setX((float)sc.nextDouble());
+				palmDirection.setY((float)sc.nextDouble());
+				palmDirection.setZ((float)sc.nextDouble());
 
 				Vector[] palmData = new Vector[2];
 				palmData[0] = palmPosition;
 				palmData[1] = palmDirection;
 
-				
+				sc.nextLine();
+
+				Vector[][] handData = new Vector[5][2];
+
+				for (int i=0; i<5; i++) {
+					Vector[] fingerData = new Vector[2];
+
+					int flag = sc.nextInt();
+
+					if (flag != -1) {
+						Vector tipPosition = new Vector();
+						tipPosition.setX((float)sc.nextDouble());
+						tipPosition.setY((float)sc.nextDouble());
+						tipPosition.setZ((float)sc.nextDouble());
+
+						Vector tipDirection = new Vector();
+						tipDirection.setX((float)sc.nextDouble());
+						tipDirection.setY((float)sc.nextDouble());
+						tipDirection.setZ((float)sc.nextDouble());
+
+						fingerData[0] = tipPosition;
+						fingerData[1] = tipPosition;
+					}
+
+					handData[i] = fingerData;
+					sc.nextLine();
+				}
+
+				sc.nextLine();
+
+				p.addFrameData(palmData, handData);
 			}
+
+			return p;
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+
+		return null;
 	}
 }
