@@ -7,7 +7,7 @@ public class Comparer {
 
 	public static void main(String[] argrs) {
 		String fn1 = getInput("Enter a fileset to load ");
-
+		System.out.println("How many patterns are there?");
 		Scanner sc = new Scanner(System.in);
 		int patterns = sc.nextInt();
 

@@ -8,6 +8,7 @@ import java.io.File;
 public class Recorder {
 
 	public static void main(String[] args) {
+		System.out.println("Enter the number of patterns to store.");
 		Scanner sc = new Scanner(System.in);
 		int patterns = sc.nextInt();
 
