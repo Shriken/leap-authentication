@@ -6,13 +6,23 @@ import com.leapmotion.leap.*;
 public class Comparer {
 
 	public static void main(String[] argrs) {
-		String fn1 = getInput("Enter a file to load ");
-		Pattern p = getSavedPattern(fn1);
+		String fn1 = getInput("Enter a fileset to load ");
+
+		Scanner sc = new Scanner(System.in);
+		int patterns = sc.nextInt();
+
+		Pattern[] pa = new Pattern[patterns];
+		for (int i=0; i<patterns; i++)
+			pa[i] = getSavedPattern(fn1 + i);
 
 		String fn2 = getInput("Enter a file to compare to ");
 		Pattern q = getSavedPattern(fn2);
 
-		System.out.println("Score: " + p.compare(q));
+		double score = 0;
+		for (Pattern p : pa)
+			score += p.compare(q);
+
+		System.out.println("Score: " + score);
 	}
 
 	public static String getInput(String prompt) {

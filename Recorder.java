@@ -8,9 +8,14 @@ import java.io.File;
 public class Recorder {
 
 	public static void main(String[] args) {
-		Pattern p = recordPattern();
+		Scanner sc = new Scanner(System.in);
+		int patterns = sc.nextInt();
 
-		savePattern(p);
+		for (int i=0; i<patterns; i++) {
+			Pattern p = recordPattern();
+
+			savePattern(p, i);
+		}
 	}
 
 	public static Pattern recordPattern() {
@@ -36,12 +41,12 @@ public class Recorder {
 		return listener.pattern;
 	}
 
-	public static void savePattern(Pattern pattern) {
+	public static void savePattern(Pattern pattern, int index) {
 		try {
 			Scanner sc = new Scanner(System.in);
 			System.out.println("Enter a filename");
 
-			String fn = "recordings/" + sc.nextLine();
+			String fn = "recordings/" + sc.nextLine() + index;
 
 			FileWriter fw = new FileWriter(new File(fn));
 
