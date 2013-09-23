@@ -8,14 +8,20 @@ import java.io.File;
 public class Recorder {
 
 	public static void main(String[] args) {
-		System.out.println("Enter the number of patterns to store.");
+		System.out.println("Enter the number of patterns to store. ");
 		Scanner sc = new Scanner(System.in);
 		int patterns = sc.nextInt();
+		sc.nextLine();
+
+		System.out.println("Enter the filename. ");
+		String fn = sc.nextLine();
 
 		for (int i=0; i<patterns; i++) {
 			Pattern p = recordPattern();
-
-			savePattern(p, i);
+			if (patterns > 1)
+				savePattern(p, fn + i);
+			else
+				savePattern(p, fn);
 		}
 	}
 
@@ -42,12 +48,9 @@ public class Recorder {
 		return listener.pattern;
 	}
 
-	public static void savePattern(Pattern pattern, int index) {
+	public static void savePattern(Pattern pattern, String fn) {
 		try {
-			Scanner sc = new Scanner(System.in);
-			System.out.println("Enter a filename");
-
-			String fn = "recordings/" + sc.nextLine() + index;
+			fn = "recordings/" + fn;
 
 			FileWriter fw = new FileWriter(new File(fn));
 
