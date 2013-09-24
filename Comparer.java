@@ -5,7 +5,7 @@ import com.leapmotion.leap.*;
 
 public class Comparer {
 
-	public static void main(String[] argrs) {
+	public static void main(String[] args) {
 		String fn1 = getInput("Enter a fileset to load ");
 		System.out.println("How many patterns are there?");
 		Scanner sc = new Scanner(System.in);
@@ -23,6 +23,18 @@ public class Comparer {
 			score += p.compare(q);
 
 		System.out.println("Score: " + score);
+		double scorePerPattern = score / patterns;
+		System.out.println("Score per pattern: " + scorePerPattern);
+		for (Pattern p : pa) {
+			int maxLen = p.length;
+			if (q.length > maxLen)
+				maxLen = q.length;
+			double scorePerFrame = scorePerPattern / maxLen;
+			System.out.println("Score per frame: " + scorePerFrame);
+
+			double scorePerFinger = scorePerFrame / 6;
+			System.out.println("Score per finger: " + scorePerFinger);
+		}
 	}
 
 	public static String getInput(String prompt) {
