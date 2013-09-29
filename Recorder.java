@@ -8,8 +8,14 @@ import java.io.File;
 public class Recorder {
 
 	public static void main(String[] args) {
-		System.out.println("Enter the number of patterns to store. ");
 		Scanner sc = new Scanner(System.in);
+
+		System.out.println("Are you righthanded? (y/n) ");
+		String response = sc.next();
+		sc.nextLine();
+		boolean rightHanded = (response == "y");
+
+		System.out.println("Enter the number of patterns to store. ");
 		int patterns = sc.nextInt();
 		sc.nextLine();
 
@@ -17,7 +23,7 @@ public class Recorder {
 		String fn = sc.nextLine();
 
 		for (int i=0; i<patterns; i++) {
-			Pattern p = recordPattern();
+			Pattern p = recordPattern(rightHanded);
 			if (patterns > 1)
 				savePattern(p, fn + i);
 			else
@@ -25,9 +31,9 @@ public class Recorder {
 		}
 	}
 
-	public static Pattern recordPattern() {
+	public static Pattern recordPattern(boolean rightHanded) {
 		Controller controller = new Controller();
-		CustomListener listener = new CustomListener();
+		CustomListener listener = new CustomListener(rightHanded);
 
 		controller.addListener(listener);
 

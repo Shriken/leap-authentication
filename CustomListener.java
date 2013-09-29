@@ -7,14 +7,19 @@ public class CustomListener extends Listener {
 	boolean done;
 	boolean fin;
 	int frameCount;
+	boolean rightHanded;
 
 	int framesNotMoving;
 	final int RECORDING_TIMEOUT = 50; //???
 
+	public CustomListener(boolean rightHanded) {
+		this.rightHanded = rightHanded;
+	}
+
 	public void onInit(Controller controller) {
 		System.out.println("Initialized");
 
-		pattern = new Pattern();
+		pattern = new Pattern(rightHanded);
 		recording = false;
 		done = false;
 
