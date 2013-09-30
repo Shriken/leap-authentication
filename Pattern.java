@@ -19,6 +19,14 @@ public class Pattern {
 		this.rightHanded = rightHanded;
 	}
 
+	public void endRecording() {
+		for (int i=0; i<CustomListener.RECORDING_TIMEOUT; i++) {
+			fingerData.remove(fingerData.size()-1);
+			palmData.remove(palmData.size()-1);
+			length--;
+		}
+	}
+
 	public double compare(Pattern p) {
 
 		//generate dynamic time warp matrix
@@ -240,21 +248,21 @@ public class Pattern {
 
 	public double[] compareFrames(Pattern p, int frameNum) {
 		return compareFrames(fingerData.get(frameNum), p.fingerData.get(frameNum),
-							 palmData.get(frameNum), p.palmData.get(frameNum));
+							 palmData.get(frameNum), p.palmData.get(frameNum), false);
 	}
 
 	public double[] compareFrames(int fn1, Pattern p, int fn2) {
 		return compareFrames(fingerData.get(fn1), p.fingerData.get(fn2),
-							 palmData.get(fn1), p.palmData.get(fn2));
+							 palmData.get(fn1), p.palmData.get(fn2), false);
 	}
 
 	public double[] compareFrames(int fn1, int fn2) {
 		return compareFrames(fingerData.get(fn1), fingerData.get(fn2),
-							 palmData.get(fn1), palmData.get(fn2));
+							 palmData.get(fn1), palmData.get(fn2), true);
 	}
 
 	public double[] compareFrames(Vector[][] fingerFrame1, Vector[][] fingerFrame2,
-								  Vector[] palmFrame1, Vector[] palmFrame2) {
+								  Vector[] palmFrame1, Vector[] palmFrame2, boolean isMovementTest) {
 		
 		double[] score = new double[2];
 
@@ -278,6 +286,8 @@ public class Pattern {
 				directionScore += Math.abs(fd1.pitch() - fd2.pitch());
 				directionScore += Math.abs(fd1.roll() - fd2.roll());
 				directionScore += Math.abs(fd1.yaw() - fd2.yaw());
+			} else if (!isMovementTest) {
+				positionScore += 100;
 			}
 		}
 

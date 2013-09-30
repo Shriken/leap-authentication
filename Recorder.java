@@ -15,12 +15,12 @@ public class Recorder {
 		sc.nextLine();
 		boolean rightHanded = (response == "y");
 
+		System.out.println("Enter the filename. ");
+		String fn = sc.nextLine();
+
 		System.out.println("Enter the number of patterns to store. ");
 		int patterns = sc.nextInt();
 		sc.nextLine();
-
-		System.out.println("Enter the filename. ");
-		String fn = sc.nextLine();
 
 		for (int i=0; i<patterns; i++) {
 			Pattern p = recordPattern(rightHanded);
@@ -62,8 +62,10 @@ public class Recorder {
 
 			System.out.println("Saving pattern");
 
+			fw.write(pattern.rightHanded + "\n");
+
 			for (int i=0; i<pattern.length; i++) {
-				if (i > 30)
+				if (i > 20)
 					fw.flush();
 
 				//write palm

@@ -10,7 +10,7 @@ public class CustomListener extends Listener {
 	boolean rightHanded;
 
 	int framesNotMoving;
-	final int RECORDING_TIMEOUT = 50; //???
+	static final int RECORDING_TIMEOUT = 50; //???
 
 	public CustomListener(boolean rightHanded) {
 		this.rightHanded = rightHanded;
@@ -41,6 +41,7 @@ public class CustomListener extends Listener {
 			if (framesNotMoving > RECORDING_TIMEOUT) {
 				done = true;
 				recording = false;
+				pattern.endRecording();
 				System.out.println("done");
 			}
 

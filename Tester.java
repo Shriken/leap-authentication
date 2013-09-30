@@ -1,53 +1,83 @@
-import java.io.File;
-import java.util.Scanner;
-import java.io.IOException;
+import java.lang.InterruptedException;
 import com.leapmotion.leap.*;
+import java.io.IOException;
+import java.io.FileWriter;
+import java.util.Scanner;
+import java.io.File;
 
-public class Comparer {
+public class Tester {
 
-	public static void main(String[] argrs) {
+	public static void main(String[] args) {
 		String fn1 = getInput("Enter a fileset to load ");
-		System.out.println("How many patterns are there?");
-		Scanner sc = new Scanner(System.in);
-		int patterns = sc.nextInt();
+		int patterns = Integer.parseInt(getInput("How many patterns are there?"));
 
 		Pattern[] pa = new Pattern[patterns];
 		for (int i=0; i<patterns; i++)
 			pa[i] = getSavedPattern(fn1 + i);
 
-		String fn2 = getInput("Enter a file to compare to ");
-		Pattern q = getSavedPattern(fn2);
+		boolean rightHanded = ("y" == getInput("Are you righthanded? (y/n) "));
 
-		double score = 0;
-		for (Pattern p : pa)
-			score += p.compare(q);
 
-		System.out.println("Score: " + score);
-		int totalFrames = 0;
-		for (Pattern p : pa)
-			totalFrames += p.length;
+		/*  Test Loop */
 
-		System.out.println("Score per frame: " + score / totalFrames);
-		double scorePerFinger = score / totalFrames / 6;
-		System.out.println("Score per finger per frame: " + scorePerFinger);
+		while (true) {
+			Pattern test = recordPattern(rightHanded);
 
-		System.out.println();
-		if (scorePerFinger < 60) {
-			System.out.println("Welcome! Success!");
-		} else {
-			System.out.println("Fuck you, go away.");
+			double score = 0;
+			for (Pattern p : pa)
+				score += p.compare(test);
+
+			System.out.println("Score: " + score);
+			int totalFrames = 0;
+			for (Pattern p : pa)
+				totalFrames += p.length;
+
+			System.out.println("Score per frame: " + score / totalFrames);
+			double scorePerFinger = score / totalFrames / 6;
+			System.out.println("Score per finger per frame: " + scorePerFinger);
+
+			System.out.println();
+			if (scorePerFinger < 60) {
+				System.out.println("Welcome! Success!");
+			} else {
+				System.out.println("You fail.");
+			}
 		}
+	}
+
+	public static Pattern recordPattern(boolean rightHanded) {
+		Controller controller = new Controller();
+		CustomListener listener = new CustomListener(rightHanded);
+
+		controller.addListener(listener);
+
+		while (!listener.done) {
+			try {
+				Thread.sleep(70);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		System.out.println("asdf");
+
+		controller.removeListener(listener);
+
+		listener.pattern.normalize();
+
+		return listener.pattern;
 	}
 
 	public static String getInput(String prompt) {
 		System.out.println(prompt);
 		
 		Scanner sc = new Scanner(System.in);
-		return "recordings/" + sc.nextLine();
+		return sc.nextLine();
 	}
 
 	public static Pattern getSavedPattern(String fn) {
 		try {
+			fn = "recordings/" + fn;
 			Scanner sc = new Scanner(new File(fn));
 
 			Pattern p = new Pattern(sc.nextBoolean());
