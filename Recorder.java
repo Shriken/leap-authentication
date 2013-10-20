@@ -64,6 +64,7 @@ public class Recorder {
 
 			fw.write(pattern.rightHanded + "\n");
 
+			//for each frame in the pattern
 			for (int i=0; i<pattern.length; i++) {
 				if (i > 20)
 					fw.flush();
