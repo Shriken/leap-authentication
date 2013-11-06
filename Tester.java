@@ -48,8 +48,11 @@ public class Tester {
 
 		//record patterns
 		Pattern[] patterns = new Pattern[RECORDS_PER_PERSON];
-		for (int i=0; i<RECORDS_PER_PERSON; i++)
+		for (int i=0; i<RECORDS_PER_PERSON; i++) {
 			patterns[i] = recordPattern(rightHanded);
+			tc.displayString("Hands out!", Color.RED);
+			sleep(2000);
+		}
 
 		//try to auth with those patterns
 		Pattern[] selfAuths = new Pattern[SELF_AUTHS_PER_PERSON];
