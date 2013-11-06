@@ -7,27 +7,41 @@ import java.io.File;
 
 public class Recorder {
 
+	boolean rightHanded;
+
 	public static void main(String[] args) {
-		System.out.println("Enter the number of patterns to store. ");
 		Scanner sc = new Scanner(System.in);
-		int patterns = sc.nextInt();
+
+		System.out.println("Are you righthanded? (y/n) ");
+		String response = sc.next();
 		sc.nextLine();
+		boolean rightHanded = (response == "y");
 
 		System.out.println("Enter the filename. ");
 		String fn = sc.nextLine();
 
+		System.out.println("Enter the number of patterns to store. ");
+		int patterns = sc.nextInt();
+		sc.nextLine();
+
+		Recorder r = new Recorder(rightHanded);
+
 		for (int i=0; i<patterns; i++) {
-			Pattern p = recordPattern();
+			Pattern p = r.recordPattern();
 			if (patterns > 1)
-				savePattern(p, fn + i);
+				r.savePattern(p, fn + i);
 			else
-				savePattern(p, fn);
+				r.savePattern(p, fn);
 		}
 	}
 
-	public static Pattern recordPattern() {
+	public Recorder(boolean rh) {
+		this.rightHanded = rightHanded;
+	}
+
+	public Pattern recordPattern() {
 		Controller controller = new Controller();
-		CustomListener listener = new CustomListener();
+		CustomListener listener = new CustomListener(rightHanded);
 
 		controller.addListener(listener);
 
@@ -48,7 +62,7 @@ public class Recorder {
 		return listener.pattern;
 	}
 
-	public static void savePattern(Pattern pattern, String fn) {
+	public void savePattern(Pattern pattern, String fn) {
 		try {
 			fn = "recordings/" + fn;
 
@@ -56,8 +70,11 @@ public class Recorder {
 
 			System.out.println("Saving pattern");
 
+			fw.write(pattern.rightHanded + "\n");
+
+			//for each frame in the pattern
 			for (int i=0; i<pattern.length; i++) {
-				if (i > 30)
+				if (i > 20)
 					fw.flush();
 
 				//write palm

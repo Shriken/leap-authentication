@@ -7,14 +7,26 @@ public class Pattern {
 	ArrayList<Vector[]> palmData;
 	int[] fingerKey;
 	int length; //number of stored frames
+	boolean rightHanded;
 
 	final double MOVEMENT_THRESHOLD = 30;
 
-	public Pattern() {
+	public Pattern(boolean rightHanded) {
 		fingerData = new ArrayList<Vector[][]>();
 		palmData = new ArrayList<Vector[]>();
 		fingerKey = new int[5];
 		length = 0;
+		this.rightHanded = rightHanded;
+	}
+
+	public void endRecording() {
+		for (int i=0; i<CustomListener.RECORDING_TIMEOUT; i++) {
+			fingerData.remove(fingerData.size()-1);
+			palmData.remove(palmData.size()-1);
+			length--;
+		}
+
+		normalize();
 	}
 
 	public double compare(Pattern p) {
@@ -141,6 +153,13 @@ public class Pattern {
 				}
 			}
 
+			//read hand other direction
+			if (!rightHanded) {
+				Vector[][] fings = new Vector[5][2];
+				for (int i=0; i<vFingers.length; i++)
+					fings[4-i] = vFingers[i];
+			}
+
 			fingerData.add(vFingers);
 		}
 
@@ -197,9 +216,15 @@ public class Pattern {
 				Vector fingerPos = fingerData.get(i)[j][0];
 
 				if (fingerPos != null) {
-					fingerPos.setX(fingerPos.getX() - initPos.getX());
-					fingerPos.setY(fingerPos.getY() - initPos.getY());
-					fingerPos.setZ(fingerPos.getZ() - initPos.getZ());
+					if (rightHanded) {
+						fingerPos.setX(fingerPos.getX() - initPos.getX());
+						fingerPos.setY(fingerPos.getY() - initPos.getY());
+						fingerPos.setZ(fingerPos.getZ() - initPos.getZ());
+					} else {
+						fingerPos.setX(-(fingerPos.getX() - initPos.getX()));
+						fingerPos.setY(-(fingerPos.getY() - initPos.getY()));
+						fingerPos.setZ(-(fingerPos.getZ() - initPos.getZ()));
+					}
 				}
 			}
 		}
@@ -225,21 +250,21 @@ public class Pattern {
 
 	public double[] compareFrames(Pattern p, int frameNum) {
 		return compareFrames(fingerData.get(frameNum), p.fingerData.get(frameNum),
-							 palmData.get(frameNum), p.palmData.get(frameNum));
+							 palmData.get(frameNum), p.palmData.get(frameNum), false);
 	}
 
 	public double[] compareFrames(int fn1, Pattern p, int fn2) {
 		return compareFrames(fingerData.get(fn1), p.fingerData.get(fn2),
-							 palmData.get(fn1), p.palmData.get(fn2));
+							 palmData.get(fn1), p.palmData.get(fn2), false);
 	}
 
 	public double[] compareFrames(int fn1, int fn2) {
 		return compareFrames(fingerData.get(fn1), fingerData.get(fn2),
-							 palmData.get(fn1), palmData.get(fn2));
+							 palmData.get(fn1), palmData.get(fn2), true);
 	}
 
 	public double[] compareFrames(Vector[][] fingerFrame1, Vector[][] fingerFrame2,
-								  Vector[] palmFrame1, Vector[] palmFrame2) {
+								  Vector[] palmFrame1, Vector[] palmFrame2, boolean isMovementTest) {
 		
 		double[] score = new double[2];
 
@@ -263,6 +288,8 @@ public class Pattern {
 				directionScore += Math.abs(fd1.pitch() - fd2.pitch());
 				directionScore += Math.abs(fd1.roll() - fd2.roll());
 				directionScore += Math.abs(fd1.yaw() - fd2.yaw());
+			} else if (!isMovementTest) {
+				positionScore += 100;
 			}
 		}
 

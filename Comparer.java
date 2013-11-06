@@ -23,17 +23,19 @@ public class Comparer {
 			score += p.compare(q);
 
 		System.out.println("Score: " + score);
-		double scorePerPattern = score / patterns;
-		System.out.println("Score per pattern: " + scorePerPattern);
-		for (Pattern p : pa) {
-			int maxLen = p.length;
-			if (q.length > maxLen)
-				maxLen = q.length;
-			double scorePerFrame = scorePerPattern / maxLen;
-			System.out.println("Score per frame: " + scorePerFrame);
+		int totalFrames = 0;
+		for (Pattern p : pa)
+			totalFrames += p.length;
 
-			double scorePerFinger = scorePerFrame / 6;
-			System.out.println("Score per finger: " + scorePerFinger);
+		System.out.println("Score per frame: " + score / totalFrames);
+		double scorePerFinger = score / totalFrames / 6;
+		System.out.println("Score per finger per frame: " + scorePerFinger);
+
+		System.out.println();
+		if (scorePerFinger < 60) {
+			System.out.println("Welcome! Success!");
+		} else {
+			System.out.println("Failed.");
 		}
 	}
 
@@ -48,7 +50,8 @@ public class Comparer {
 		try {
 			Scanner sc = new Scanner(new File(fn));
 
-			Pattern p = new Pattern();
+			Pattern p = new Pattern(sc.nextBoolean());
+			sc.nextLine();
 
 			while (sc.hasNextLine()) {
 				sc.next(); //get rid of leading 'p'
