@@ -35,7 +35,7 @@ public class Comparer {
 		if (scorePerFinger < 60) {
 			System.out.println("Welcome! Success!");
 		} else {
-			System.out.println("Fuck you, go away.");
+			System.out.println("Failed.");
 		}
 	}
 

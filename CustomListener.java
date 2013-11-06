@@ -5,7 +5,6 @@ public class CustomListener extends Listener {
 	Pattern pattern;
 	boolean recording;
 	boolean done;
-	boolean fin;
 	int frameCount;
 	boolean rightHanded;
 

@@ -7,6 +7,8 @@ import java.io.File;
 
 public class Recorder {
 
+	boolean rightHanded;
+
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 
@@ -22,16 +24,22 @@ public class Recorder {
 		int patterns = sc.nextInt();
 		sc.nextLine();
 
+		Recorder r = new Recorder(rightHanded);
+
 		for (int i=0; i<patterns; i++) {
-			Pattern p = recordPattern(rightHanded);
+			Pattern p = r.recordPattern();
 			if (patterns > 1)
-				savePattern(p, fn + i);
+				r.savePattern(p, fn + i);
 			else
-				savePattern(p, fn);
+				r.savePattern(p, fn);
 		}
 	}
 
-	public static Pattern recordPattern(boolean rightHanded) {
+	public Recorder(boolean rh) {
+		this.rightHanded = rightHanded;
+	}
+
+	public Pattern recordPattern() {
 		Controller controller = new Controller();
 		CustomListener listener = new CustomListener(rightHanded);
 
@@ -54,7 +62,7 @@ public class Recorder {
 		return listener.pattern;
 	}
 
-	public static void savePattern(Pattern pattern, String fn) {
+	public void savePattern(Pattern pattern, String fn) {
 		try {
 			fn = "recordings/" + fn;
 

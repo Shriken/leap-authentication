@@ -25,6 +25,8 @@ public class Pattern {
 			palmData.remove(palmData.size()-1);
 			length--;
 		}
+
+		normalize();
 	}
 
 	public double compare(Pattern p) {
