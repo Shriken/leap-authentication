@@ -10,3 +10,7 @@ The end result should look something like the following.
 2. The user records that gesture a few times.
 3. The user performs the gesture and is logged in.
 4. Another user performs the same gesture, and is rejected based on differing movement patterns.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Shriken/leap-authentication/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
